@@ -23,9 +23,9 @@ Create a new user for this script in SMSEagle.
 
 2. Edit following lines in the script:
 
-SMSEAGLEIP="192.168.1.101"
-SMSEAGLEUSER="john"
-SMSEAGLEPASSWORD="doe"
+   SMSEAGLEIP="192.168.1.101"
+   SMSEAGLEUSER="john"
+   SMSEAGLEPASSWORD="doe"
 
 
 3. Put your script into /usr/local/nagios/plugins/notifications on the Opsview master server.
