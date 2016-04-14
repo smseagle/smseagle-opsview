@@ -4,8 +4,8 @@
 #
 # Summary : This plugin sends SMS alerts with SMSEagle hardware sms gateway
 # Program : notify_opsview_smseagle.sh
-# Version : 1.0
-# Date : Apr 01, 2016
+# Version : 1.1
+# Date : Apr 14, 2016
 # Author : Przemyslaw Jarmuzek / SMSEAGLE.EU
 # License : BSD
 # Copyright (c) 2016, SMSEagle www.smseagle.eu
@@ -46,11 +46,15 @@ elif [ -z $DESTNR ]; then
 fi
 
 ### Message content ###
-TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE:$NAGIOS_SERVICEDESC%20on%20$NAGIOS_HOSTNAME%20is%20$NAGIOS_SERVICESTATE:$NAGIOS_SERVICEOUTPUT%20$NAGIOS_SHORTDATETIME"`
+NAGIOS_SERVICE=`echo -n "$NAGIOS_SERVICEDESC"`
+if [ -z $NAGIOS_SERVICE} ]; then
+    TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE:$NAGIOS_SERVICEDESC%20on%20$NAGIOS_HOSTNAME%20is%20$NAGIOS_SERVICESTATE:$NAGIOS_SERVICEOUTPUT%20$NAGIOS_SHORTDATETIME"`
+    else
+    TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE:$NAGIOS_HOSTNAME%20is%20$NAGIOS_HOSTSTATE:$NAGIOS_HOSTOUTPUT%20$NAGIOS_SHORTDATETIME"`
+fi
 #=============================#
 
 # Api call to send SMS message
 wget -qO- "http://"${SMSEAGLEIP}"/index.php/http_api/send_sms?login="${SMSEAGLEUSER}"&pass="${SMSEAGLEPASSWORD}"&to="${DESTNR}"&message="${TEXT}""
 
 echo ""
-A
