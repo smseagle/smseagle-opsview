@@ -4,8 +4,8 @@
 #
 # Summary : This plugin sends SMS alerts with SMSEagle hardware sms gateway
 # Program : notify_opsview_smseagle.sh
-# Version : 1.1
-# Date : Apr 14, 2016
+# Version : 1.2
+# Date : Apr 26, 2016
 # Author : Przemyslaw Jarmuzek / SMSEAGLE.EU
 # License : BSD
 # Copyright (c) 2016, SMSEagle www.smseagle.eu
@@ -23,7 +23,7 @@ SMSEAGLEUSER="john"
 SMSEAGLEPASSWORD="doe"
 #===========================================================#
 
-# Let see if script can work..
+### Verify if script can work ###
 DESTNR=$1
 WGET=`which wget`
 if [ -z $WGET ]; then
@@ -44,17 +44,38 @@ elif [ -z $DESTNR ]; then
 	echo "This script requires destination number provided, please fill settings above"
 	exit 1
 fi
+#=============================#
+
+### Function for urlencode of SMS text ###
+rawurlencode() {
+  local string="${TEXT}"
+  local strlen=${#string}
+  local encoded=""
+  local pos c o
+
+  for (( pos=0 ; pos<strlen ; pos++ )); do
+     c=${string:$pos:1}
+     case "$c" in
+        [-_.~a-zA-Z0-9] ) o="${c}" ;;
+        * )               printf -v o '%%%02x' "'$c"
+     esac
+     encoded+="${o}"
+  done
+  TEXT="${encoded}"
+}
+#=============================#
 
 ### Message content ###
 NAGIOS_SERVICE=`echo -n "$NAGIOS_SERVICEDESC"`
 if [ -z $NAGIOS_SERVICE} ]; then
-    TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE:$NAGIOS_SERVICEDESC%20on%20$NAGIOS_HOSTNAME%20is%20$NAGIOS_SERVICESTATE:$NAGIOS_SERVICEOUTPUT%20$NAGIOS_SHORTDATETIME"`
+    TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE:$NAGIOS_SERVICEDESC on $NAGIOS_HOSTNAME is $NAGIOS_SERVICESTATE:$NAGIOS_SERVICEOUTPUT $NAGIOS_SHORTDATETIME"`
     else
-    TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE:$NAGIOS_HOSTNAME%20is%20$NAGIOS_HOSTSTATE:$NAGIOS_HOSTOUTPUT%20$NAGIOS_SHORTDATETIME"`
+    TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE:$NAGIOS_HOSTNAME is $NAGIOS_HOSTSTATE:$NAGIOS_HOSTOUTPUT $NAGIOS_SHORTDATETIME"`
 fi
+rawurlencode "$TEXT"
 #=============================#
 
-# Api call to send SMS message
+### HTTP API call to send SMS message ###
 wget -qO- "http://"${SMSEAGLEIP}"/index.php/http_api/send_sms?login="${SMSEAGLEUSER}"&pass="${SMSEAGLEPASSWORD}"&to="${DESTNR}"&message="${TEXT}""
-
 echo ""
+
