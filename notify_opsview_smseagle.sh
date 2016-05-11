@@ -4,8 +4,8 @@
 #
 # Summary : This plugin sends SMS alerts with SMSEagle hardware sms gateway
 # Program : notify_opsview_smseagle.sh
-# Version : 1.2
-# Date : Apr 26, 2016
+# Version : 1.3
+# Date : May, 5, 2016
 # Author : Przemyslaw Jarmuzek / SMSEAGLE.EU
 # License : BSD
 # Copyright (c) 2016, SMSEagle www.smseagle.eu
@@ -66,12 +66,19 @@ rawurlencode() {
 #=============================#
 
 ### Message content ###
+OPSVIEWNAME=`echo -n "$OPSVIEW_NAME"`
 NAGIOS_SERVICE=`echo -n "$NAGIOS_SERVICEDESC"`
-if [ -z $NAGIOS_SERVICE} ]; then
-    TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE:$NAGIOS_SERVICEDESC on $NAGIOS_HOSTNAME is $NAGIOS_SERVICESTATE:$NAGIOS_SERVICEOUTPUT $NAGIOS_SHORTDATETIME"`
-    else
-    TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE:$NAGIOS_HOSTNAME is $NAGIOS_HOSTSTATE:$NAGIOS_HOSTOUTPUT $NAGIOS_SHORTDATETIME"`
+NAGIOSHOSTNAME=`echo -n "$NAGIOS_HOSTNAME"`
+if [ $OPSVIEWNAME ];then
+	TEXT=`echo -n "$OPSVIEW_OUTPUT"`
+elif [ $NAGIOSHOSTNAME ]; then
+	if [ $NAGIOS_SERVICE ]; then
+    		TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE : $NAGIOS_SERVICEDESC on $NAGIOS_HOSTNAME is $NAGIOS_SERVICESTATE : $NAGIOS_SERVICEOUTPUT $NAGIOS_SHORTDATETIME"`
+    	else
+    		TEXT=`echo -n "$NAGIOS_NOTIFICATIONTYPE : $NAGIOS_HOSTNAME is $NAGIOS_HOSTSTATE : $NAGIOS_HOSTOUTPUT $NAGIOS_SHORTDATETIME"`
+	fi
 fi
+
 rawurlencode "$TEXT"
 #=============================#
 
