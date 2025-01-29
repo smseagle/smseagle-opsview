@@ -28,7 +28,7 @@ Installation instructions
 
 
 2. Edit following lines in the script:
-   SMSEAGLEIP="192.168.1.101"
+   SMSEAGLEIP="http://192.168.1.101"
    SMSEAGLETOKEN="123abc456def789"
    SMSEAGLEMSGTYPE="sms"
 

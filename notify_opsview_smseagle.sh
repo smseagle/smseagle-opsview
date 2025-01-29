@@ -22,7 +22,7 @@
 # SMSEAGLEVOICEID = ID of a voice model (default value: 1)
 #
 ### SMSEagle SETUP - please remember to change these settings
-SMSEAGLEIP="192.168.1.101"
+SMSEAGLEIP="http://192.168.1.101"
 SMSEAGLETOKEN="123abc456def789"
 SMSEAGLEMSGTYPE="sms"
 
