@@ -4,11 +4,11 @@
 #
 # Summary : This plugin sends SMS alerts with SMSEagle hardware sms gateway
 # Program : notify_opsview_smseagle.sh
-# Version : 1.3
-# Date : May, 5, 2016
-# Author : Przemyslaw Jarmuzek / SMSEAGLE.EU
+# Version : 1.4
+# Date : January, 29, 2025
+# Author : Przemyslaw Jarmuzek / Marcin Kiszka / SMSEAGLE.EU
 # License : BSD
-# Copyright (c) 2016, SMSEagle www.smseagle.eu
+# Copyright (c) 2025, SMSEagle www.smseagle.eu
 #
 # ============================= SCRIPT ==========================================
 #
