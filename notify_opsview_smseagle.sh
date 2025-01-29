@@ -13,14 +13,21 @@
 # ============================= SCRIPT ==========================================
 #
 # Script params description:
-# SMSEAGLEIP = IP Address of your SMSEagle device (eg.: 192.168.1.150)
-# SMSEAGLEUSER = SMSEagle user
-# SMSEAGLEPASSWORD = SMSEagle password
+# SMSEAGLEIP = IP Address of your SMSEagle device (eg.: https://192.168.1.150)
+# SMSEAGLETOKEN = Access token
+# SMSEAGLEMSGTYPE = Type of message/call you want to send/queue. Available values: sms, ring, tts, tts_adv.
 #
-### SMSEagle SETUP - please remember to change that settings
+# Optional:
+# SMSEAGLEDURATION = Duration of a call in seconds (default value: 10)
+# SMSEAGLEVOICEID = ID of a voice model (default value: 1)
+#
+### SMSEagle SETUP - please remember to change these settings
 SMSEAGLEIP="192.168.1.101"
-SMSEAGLEUSER="john"
-SMSEAGLEPASSWORD="doe"
+SMSEAGLETOKEN="123abc456def789"
+SMSEAGLEMSGTYPE="sms"
+
+SMSEAGLEDURATION="10"
+SMSEAGLEVOICEID="1"
 #===========================================================#
 
 ### Verify if script can work ###
@@ -34,12 +41,12 @@ fi
 if [ -z $SMSEAGLEIP ]; then
     echo "This script requires SMSEagle IP address provided, please fill settings above"
     exit 1 
-elif [ -z $SMSEAGLEUSER ]; then
-	echo "This script requires SMSEeagle username provided, please fill settings above"    
+elif [ -z $SMSEAGLETOKEN ]; then
+	echo "This script requires SMSEeagle access token provided, please fill settings above"    
 	exit 1
-elif [ -z $SMSEAGLEPASSWORD ]; then
-        echo "This script requires SMSEeagle password provided, please fill settings above"
-        exit 1
+elif [ -z $SMSEAGLEMSGTYPE ]; then
+	echo "This script requires SMSEeagle access token provided, please fill settings above"    
+	exit 1
 elif [ -z $DESTNR ]; then
 	echo "This script requires destination number provided, please fill settings above"
 	exit 1
@@ -82,7 +89,31 @@ fi
 rawurlencode "$TEXT"
 #=============================#
 
+REQUESTTYPE="send_sms"
+REQUESTPARAMS=""
+
+case ${SMSEAGLEMSGTYPE} in
+  "ring")
+    REQUESTTYPE="ring_call"
+    REQUESTPARAMS="&duration=${SMSEAGLEDURATION}"
+  ;;
+  "tts")
+    REQUESTTYPE="tts_call"
+    REQUESTPARAMS="&duration=${SMSEAGLEDURATION}"
+  ;;
+  "tts_adv")
+    REQUESTTYPE="tts_adv_call"
+    REQUESTPARAMS="&duration=${SMSEAGLEDURATION}&voice_id=${SMSEAGLEVOICEID}"
+  ;;
+  *)
+    REQUESTTYPE="send_sms"
+    REQUESTPARAMS=""
+  ;;
+esac
+
+#=============================#
+
 ### HTTP API call to send SMS message ###
-wget -qO- "http://"${SMSEAGLEIP}"/index.php/http_api/send_sms?login="${SMSEAGLEUSER}"&pass="${SMSEAGLEPASSWORD}"&to="${DESTNR}"&message="${TEXT}""
+wget -qO- "${SMSEAGLEIP}/index.php/http_api/${REQUESTTYPE}?access_token=${SMSEAGLETOKEN}&to=${DESTNR}&message=${TEXT}${REQUESTPARAMS}"
 echo ""
 
