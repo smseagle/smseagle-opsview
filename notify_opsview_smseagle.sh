@@ -4,7 +4,7 @@
 #
 # Summary : This plugin sends SMS alerts with SMSEagle hardware sms gateway
 # Program : notify_opsview_smseagle.sh
-# Version : 1.3
+# Version : 1.4
 # Date : May, 5, 2016
 # Author : Przemyslaw Jarmuzek / SMSEAGLE.EU
 # License : BSD
@@ -14,13 +14,11 @@
 #
 # Script params description:
 # SMSEAGLEIP = IP Address of your SMSEagle device (eg.: 192.168.1.150)
-# SMSEAGLEUSER = SMSEagle user
-# SMSEAGLEPASSWORD = SMSEagle password
+# SMSEAGLETOKEN = SMSEagle APIv2 access token
 #
 ### SMSEagle SETUP - please remember to change that settings
 SMSEAGLEIP="192.168.1.101"
-SMSEAGLEUSER="john"
-SMSEAGLEPASSWORD="doe"
+SMSEAGLETOKEN="g4cq8oK6X7YpdlIEa373kg3tRQQjP6jl"
 #===========================================================#
 
 ### Verify if script can work ###
@@ -34,12 +32,9 @@ fi
 if [ -z $SMSEAGLEIP ]; then
     echo "This script requires SMSEagle IP address provided, please fill settings above"
     exit 1 
-elif [ -z $SMSEAGLEUSER ]; then
-	echo "This script requires SMSEeagle username provided, please fill settings above"    
+elif [ -z $SMSEAGLETOKEN ]; then
+	echo "This script requires SMSEeagle token provided, please fill settings above"    
 	exit 1
-elif [ -z $SMSEAGLEPASSWORD ]; then
-        echo "This script requires SMSEeagle password provided, please fill settings above"
-        exit 1
 elif [ -z $DESTNR ]; then
 	echo "This script requires destination number provided, please fill settings above"
 	exit 1
@@ -83,6 +78,10 @@ rawurlencode "$TEXT"
 #=============================#
 
 ### HTTP API call to send SMS message ###
-wget -qO- "http://"${SMSEAGLEIP}"/index.php/http_api/send_sms?login="${SMSEAGLEUSER}"&pass="${SMSEAGLEPASSWORD}"&to="${DESTNR}"&message="${TEXT}""
+wget -qO- --post-data "{\"to\":\"${DESTNR}\",\"message\":\"${TEXT}\"}" \
+ --header="Content-Type: application/json" \
+ --header="access-token: ${SMSEAGLETOKEN}" \
+ "http://${SMSEAGLEIP}/api/v2/messages/sms"
+
 echo ""
 
