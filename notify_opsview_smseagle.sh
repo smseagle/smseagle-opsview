@@ -78,7 +78,7 @@ rawurlencode "$TEXT"
 #=============================#
 
 ### HTTP API call to send SMS message ###
-wget -qO- --post-data "{\"to\":\"${DESTNR}\",\"message\":\"${TEXT}\"}" \
+wget --post-data "{\"to\":[\"${DESTNR}\"],\"text\":\"${TEXT}\"}" \
  --header="Content-Type: application/json" \
  --header="access-token: ${SMSEAGLETOKEN}" \
  "http://${SMSEAGLEIP}/api/v2/messages/sms"
