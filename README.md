@@ -28,13 +28,14 @@ Installation instructions
 
 
 2. Edit following lines in the script:
-   SMSEAGLEIP="http://192.168.1.101"
-   SMSEAGLETOKEN="123abc456def789"
-   SMSEAGLEMSGTYPE="sms" (available values: sms, ring, tts, tts_adv)
 
-   Optional:
-   SMSEAGLEDURATION = Duration of a call in seconds (default value: 10)
-   SMSEAGLEVOICEID = ID of a voice model (default value: 1)
+   - SMSEAGLEIP="http://192.168.1.101"
+   - SMSEAGLETOKEN="123abc456def789"
+   - SMSEAGLEMSGTYPE="sms" (available values: sms, ring, tts, tts_adv)
+
+   Optional:</br>
+   - SMSEAGLEDURATION = Duration of a call in seconds (default value: 10)<br/>
+   - SMSEAGLEVOICEID = ID of a voice model (default value: 1)
 
 
 3. Put your script into /usr/local/nagios/plugins/notifications on the Opsview master server.
