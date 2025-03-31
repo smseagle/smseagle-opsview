@@ -3,7 +3,7 @@ Opsview-SMS-EAGLE
 
 Plugin for Opsview SMS Alerts with use of SMSEagle device (http://www.smseagle.eu)
 
-Script source: https://github.com/smseagle/smseagle-opsview
+Script source: https://bitbucket.org/proximus/smseagle-opsview/
 
 Published on BSD License
 
@@ -13,13 +13,7 @@ Installation instructions
 
 #### SMSEAGLE SETUP
 
-1. Create a new user for this script in **SMSEagle > Users** menu.
-
-
-2. Open the **Access to API** menu, enable **APIv1** and generate an **access token**.
-
-
-3. In the same menu, add the permission for request you want to send.
+Create a new user for this script in SMSEagle.
 
 
 #### OPSVIEW SETUP
@@ -28,13 +22,9 @@ Installation instructions
 
 
 2. Edit following lines in the script:
-   SMSEAGLEIP="http://192.168.1.101"
-   SMSEAGLETOKEN="123abc456def789"
-   SMSEAGLEMSGTYPE="sms"
-
-   Optional:
-   SMSEAGLEDURATION = Duration of a call in seconds (default value: 10)
-   SMSEAGLEVOICEID = ID of a voice model (default value: 1)
+   SMSEAGLEIP="192.168.1.101"
+   SMSEAGLEUSER="john"
+   SMSEAGLEPASSWORD="doe"
 
 
 3. Put your script into /usr/local/nagios/plugins/notifications on the Opsview master server.

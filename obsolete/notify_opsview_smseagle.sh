@@ -4,30 +4,23 @@
 #
 # Summary : This plugin sends SMS alerts with SMSEagle hardware sms gateway
 # Program : notify_opsview_smseagle.sh
-# Version : 1.4
-# Date : January, 29, 2025
-# Author : Przemyslaw Jarmuzek / Marcin Kiszka / SMSEAGLE.EU
+# Version : 1.3
+# Date : May, 5, 2016
+# Author : Przemyslaw Jarmuzek / SMSEAGLE.EU
 # License : BSD
-# Copyright (c) 2025, SMSEagle www.smseagle.eu
+# Copyright (c) 2016, SMSEagle www.smseagle.eu
 #
 # ============================= SCRIPT ==========================================
 #
 # Script params description:
-# SMSEAGLEIP = IP Address of your SMSEagle device (eg.: https://192.168.1.150)
-# SMSEAGLETOKEN = Access token
-# SMSEAGLEMSGTYPE = Type of message/call you want to send/queue. Available values: sms, ring, tts, tts_adv.
+# SMSEAGLEIP = IP Address of your SMSEagle device (eg.: 192.168.1.150)
+# SMSEAGLEUSER = SMSEagle user
+# SMSEAGLEPASSWORD = SMSEagle password
 #
-# Optional:
-# SMSEAGLEDURATION = Duration of a call in seconds (default value: 10)
-# SMSEAGLEVOICEID = ID of a voice model (default value: 1)
-#
-### SMSEagle SETUP - please remember to change these settings
-SMSEAGLEIP="http://192.168.1.101"
-SMSEAGLETOKEN="123abc456def789"
-SMSEAGLEMSGTYPE="sms"
-
-SMSEAGLEDURATION="10"
-SMSEAGLEVOICEID="1"
+### SMSEagle SETUP - please remember to change that settings
+SMSEAGLEIP="192.168.1.101"
+SMSEAGLEUSER="john"
+SMSEAGLEPASSWORD="doe"
 #===========================================================#
 
 ### Verify if script can work ###
@@ -41,12 +34,12 @@ fi
 if [ -z $SMSEAGLEIP ]; then
     echo "This script requires SMSEagle IP address provided, please fill settings above"
     exit 1 
-elif [ -z $SMSEAGLETOKEN ]; then
-	echo "This script requires SMSEeagle access token provided, please fill settings above"    
+elif [ -z $SMSEAGLEUSER ]; then
+	echo "This script requires SMSEeagle username provided, please fill settings above"    
 	exit 1
-elif [ -z $SMSEAGLEMSGTYPE ]; then
-	echo "This script requires SMSEeagle access token provided, please fill settings above"    
-	exit 1
+elif [ -z $SMSEAGLEPASSWORD ]; then
+        echo "This script requires SMSEeagle password provided, please fill settings above"
+        exit 1
 elif [ -z $DESTNR ]; then
 	echo "This script requires destination number provided, please fill settings above"
 	exit 1
@@ -89,31 +82,7 @@ fi
 rawurlencode "$TEXT"
 #=============================#
 
-REQUESTTYPE="send_sms"
-REQUESTPARAMS=""
-
-case ${SMSEAGLEMSGTYPE} in
-  "ring")
-    REQUESTTYPE="ring_call"
-    REQUESTPARAMS="&duration=${SMSEAGLEDURATION}"
-  ;;
-  "tts")
-    REQUESTTYPE="tts_call"
-    REQUESTPARAMS="&duration=${SMSEAGLEDURATION}"
-  ;;
-  "tts_adv")
-    REQUESTTYPE="tts_adv_call"
-    REQUESTPARAMS="&duration=${SMSEAGLEDURATION}&voice_id=${SMSEAGLEVOICEID}"
-  ;;
-  *)
-    REQUESTTYPE="send_sms"
-    REQUESTPARAMS=""
-  ;;
-esac
-
-#=============================#
-
 ### HTTP API call to send SMS message ###
-wget -qO- "${SMSEAGLEIP}/index.php/http_api/${REQUESTTYPE}?access_token=${SMSEAGLETOKEN}&to=${DESTNR}&message=${TEXT}${REQUESTPARAMS}"
+wget -qO- "http://"${SMSEAGLEIP}"/index.php/http_api/send_sms?login="${SMSEAGLEUSER}"&pass="${SMSEAGLEPASSWORD}"&to="${DESTNR}"&message="${TEXT}""
 echo ""
 
