@@ -24,13 +24,13 @@ Installation instructions
 
 #### OPSVIEW SETUP
 
-1. Download latest version of Opsview script from: https://bitbucket.org/proximus/smseagle-opsview
+1. Download latest version of Opsview script from: https://github.com/smseagle/smseagle-opsview
 
 
 2. Edit following lines in the script:
    SMSEAGLEIP="http://192.168.1.101"
    SMSEAGLETOKEN="123abc456def789"
-   SMSEAGLEMSGTYPE="sms"
+   SMSEAGLEMSGTYPE="sms" (available values: sms, ring, tts, tts_adv)
 
    Optional:
    SMSEAGLEDURATION = Duration of a call in seconds (default value: 10)
